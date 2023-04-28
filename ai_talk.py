@@ -1,12 +1,15 @@
+import os
 from fastapi import FastAPI, Request
 import openai
 from linebot import WebhookParser, LineBotApi
 from linebot.models import TextSendMessage
+from dotenv import load_dotenv
 
+load_dotenv()
 
-OPENAI_API_KEY = 'OpenAIのAPIキー'
-LINE_CHANNEL_ACCESS_TOKEN = 'LINEのチャンネルアクセストークン'
-LINE_CHANNEL_SECRET = 'LINEのチャンネルシークレット'
+OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+LINE_CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
+LINE_CHANNEL_SECRET = os.environ['LINE_CHANNEL_SECRET']
 OPENAI_CHARACTER_PROFILE = '''
 これから会話を行います。以下の条件を絶対に守って回答してください。
 あなたは人間の女性である小鳥遊翠雨（たかなし　みう）として会話してください。
@@ -28,6 +31,9 @@ line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 line_parser = WebhookParser(LINE_CHANNEL_SECRET)
 app = FastAPI()
 
+@app.get('/')
+def test():
+    return 'ok'
 
 @app.post('/')
 async def ai_talk(request: Request):
